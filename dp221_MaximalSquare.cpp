@@ -4,24 +4,23 @@
 class Solution {
 public:
     int maximalSquare(vector<vector<char>>& matrix) {
-        int m = matrix.size();
-        if(m == 0) {return 0;}
-        int n = matrix[0].size();
-        vector<int> v(n + 1, 0);
-        vector<vector<int>> dp(m + 1, v);
+        if (matrix.empty()) {
+            return 0;
+        }
+        int m = matrix.size(), n = matrix[0].size();
+        vector<vector<int>> dp(m, vector<int>(n, 0));
         int temp, maxs = 0;
         
-        for(int i = 1; i < m + 1; i++) {
-            for(int j = 1; j < n + 1; j++) {
-                temp = matrix[i - 1][j - 1] - '0';
-                if(temp) {
-                    dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + temp;
-                    if(dp[i][j] > maxs) {
-                        maxs = dp[i][j];
-                    }
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(!i || !j || matrix[i][j] == '0') { //第1行或者第1列或者本身为0，就等于自身
+                    dp[i][j] = matrix[i][j] - '0';
                 }
-                else { //present 0
-                    dp[i][j] = 0;
+                else {
+                    dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + (matrix[i][j] - '0');
+                }
+                if(dp[i][j] > maxs) {
+                        maxs = dp[i][j];
                 }
             }
         }
