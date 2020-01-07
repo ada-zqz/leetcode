@@ -8,21 +8,22 @@ public:
             return 0;
         }
         int m = matrix.size(), n = matrix[0].size();
-        vector<vector<int>> dp(m, vector<int>(n, 0));
-        int temp, maxs = 0;
+        vector<int> cur(n, 0), pre(n, 0);
+        int maxs = 0;
         
         for(int i = 0; i < m; i++) {
             for(int j = 0; j < n; j++) {
                 if(!i || !j || matrix[i][j] == '0') { //第1行或者第1列或者本身为0，就等于自身
-                    dp[i][j] = matrix[i][j] - '0';
+                    cur[j] = matrix[i][j] - '0';
                 }
                 else {
-                    dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1; //(matrix[i][j] - '0')
+                    cur[j] = min(pre[j - 1], pre[j], cur[j - 1]) + 1;
                 }
-                if(dp[i][j] > maxs) {
-                        maxs = dp[i][j];
+                if(cur[j] > maxs) {
+                    maxs = cur[j];
                 }
             }
+            swap(pre, cur);
         }
         return maxs*maxs;
     }
