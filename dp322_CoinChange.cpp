@@ -12,38 +12,13 @@ public:
         if(amount == 0)
             return 0;
         
-        queue<Part> q;
-        sort(coins.begin(), coins.end(), greater<int>());
-        if(amount < coins[coins.size() - 1])
-            return -1;
-        int minstep = 1<<30;
-        for(int i = 0; i < coins.size(); i++) {
-            if((amount % coins[i]) == 0) {
-                minstep = min(minstep, amount / coins[i]);
-            }
-            if(amount > coins[i]) {
-                q.push(Part(1, amount - coins[i]));
-            }
-        }
-        while(!q.empty()) {
-            Part p = q.front();
-            if(p.step >= minstep) {
-                return minstep;
-            }
-            if(p.amount == 0) {
-                return p.step;
-            }
-            else {
-                for(int i = 0; i < coins.size(); i++) {
-                    if(coins[i] <= p.amount) {
-                        q.push(Part(p.step + 1, p.amount - coins[i]));
-                    }
-                }
-            }
-            q.pop();
-        }
-        if(minstep != (1<<30))
-            return minstep;
-        return -1;
+        vector<int> dp(amount + 1, amount + 1);
+        dp[0] = 0;
+        for(int i = 1; i < amount + 1; i++) {
+            for(int j = 0; j < coins.size(); j++) {
+                if(i >= coins[j]) {
+                    dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+
+        return (dp[amount]) < (amount + 1) ? dp[amount] : -1;
     }
 };
