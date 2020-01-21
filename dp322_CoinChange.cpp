@@ -1,3 +1,9 @@
+struct Part{
+    int step; //第几步
+    int amount; //还需要补足的amount
+    Part(int s, int na): step(s), amount(na) {}
+};
+
 class Solution {
 public:
     int coinChange(vector<int>& coins, int amount) {
@@ -12,9 +18,7 @@ public:
             for(int j = 0; j < coins.size(); j++) {
                 if(i >= coins[j]) {
                     dp[i] = min(dp[i], dp[i - coins[j]] + 1);
-                }
-            }
-        }
+
         return (dp[amount]) < (amount + 1) ? dp[amount] : -1;
     }
 };
