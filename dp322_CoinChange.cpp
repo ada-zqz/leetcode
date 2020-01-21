@@ -13,9 +13,13 @@ public:
             return 0;
         
         queue<Part> q;
+        sort(coins.begin(), coins.end(), greater<int>());
+        if(amount < coins[coins.size() - 1])
+            return -1;
+        int minstep = 1<<30;
         for(int i = 0; i < coins.size(); i++) {
-            if(amount == coins[i]) {
-                return 1;
+            if((amount % coins[i]) == 0) {
+                minstep = min(minstep, amount / coins[i]);
             }
             if(amount > coins[i]) {
                 q.push(Part(1, amount - coins[i]));
@@ -23,6 +27,9 @@ public:
         }
         while(!q.empty()) {
             Part p = q.front();
+            if(p.step >= minstep) {
+                return minstep;
+            }
             if(p.amount == 0) {
                 return p.step;
             }
@@ -35,6 +42,8 @@ public:
             }
             q.pop();
         }
+        if(minstep != (1<<30))
+            return minstep;
         return -1;
     }
 };
