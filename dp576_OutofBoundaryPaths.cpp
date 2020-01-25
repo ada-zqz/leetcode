@@ -1,25 +1,17 @@
 class Solution {
 public:
     int findPaths(int m, int n, int N, int i, int j) {
-        if(N < 1)
-            return 0;
-        
-        int np = 0, nowN = 0;
-        Dfs(np, m, n, N, nowN, i, j);
-        return np;
-    }
-    void Dfs(int& np, int& m, int& n, int& N, int nowN, int i, int j) {
-        if((nowN <= N) && (i < 0 || i >= m || j < 0 || j >= n)) {
-            np += 1;
-            return;
+        // 由(i, j)走N步出格子 == 从格子外走N步到(i, j)
+        static int MOD = 1000000007;
+        unsigned int dp[51][50][50];
+        for(int nowN = 1; nowN <= N; nowN++) {
+            for(int r = 0; r < m; r++) {
+                for(int c = 0; c < n; c++) {
+                    // at most move N (not exactly move N)
+                    dp[nowN][r][c] = (((r == 0) ? 1 : dp[nowN - 1][r - 1][c]) + ((r == m - 1) ? 1 : dp[nowN - 1][r + 1][c]) + ((c == 0) ? 1 : dp[nowN - 1][r][c - 1]) + ((c == n - 1) ? 1 : dp[nowN - 1][r][c + 1])) % MOD;
+                }
+            }
         }
-        if(nowN >= N) {
-            return;            
-        }
-        nowN += 1;
-        Dfs(np, m, n, N, nowN, i - 1, j);
-        Dfs(np, m, n, N, nowN, i + 1, j);
-        Dfs(np, m, n, N, nowN, i, j - 1);
-        Dfs(np, m, n, N, nowN, i, j + 1);
+        return dp[N][i][j];
     }
 };
