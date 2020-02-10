@@ -9,16 +9,12 @@
  */
 class Solution {
 public:
+    int nsum = 0;
     TreeNode* bstToGst(TreeNode* root) {
-        int nsum = 0;
-        NodeSum(root, nsum);
+        if(root->right) bstToGst(root->right);
+        root->val += nsum;
+        nsum = root->val;
+        if(root->left) bstToGst(root->left);
         return root;
-    }
-    void NodeSum(TreeNode* now, int& nsum) {
-        if(!now) return;
-        NodeSum(now->right, nsum);
-        now->val += nsum;
-        nsum = now->val;
-        NodeSum(now->left, nsum);
     }
 };
