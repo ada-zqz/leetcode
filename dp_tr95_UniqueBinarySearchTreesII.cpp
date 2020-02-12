@@ -23,16 +23,13 @@ public:
         if(start == end) {
             res.push_back(new TreeNode(start));
         }
-        if(start < end) {
+        else {
             for(int nowroot = start; nowroot <= end; nowroot++) {
-                vector<TreeNode*> left = generateTree(start, nowroot - 1);
-                vector<TreeNode*> right = generateTree(nowroot + 1, end);
-                
-                for(int j = 0; j < left.size(); j++) {
-                    for(int k = 0; k < right.size(); k++) {
+                for(TreeNode* left: generateTree(start, nowroot - 1)) {
+                    for(TreeNode* right: generateTree(nowroot + 1, end)) {
                         TreeNode* newroot = new TreeNode(nowroot);
-                        newroot->left = left[j];
-                        newroot->right = right[k];
+                        newroot->left = left;
+                        newroot->right = right;
                         res.push_back(newroot);
                     }
                 }
