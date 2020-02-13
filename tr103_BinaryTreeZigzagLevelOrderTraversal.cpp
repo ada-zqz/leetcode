@@ -13,29 +13,24 @@ public:
         vector<vector<int>> res;
         if(!root)
             return res;
-        stack<TreeNode*> ptr;
-        ptr.push(root);
-        int n = 1;
-        while(!ptr.empty()) {
-            vector<int> zig;
-            stack<TreeNode*> newptr;
-            TreeNode* p;
-            while(!ptr.empty()) {
-                p = ptr.top();
-                ptr.pop();
-                zig.push_back(p->val);
-                if(n % 2) {
-                    if(p->left) newptr.push(p->left);
-                    if(p->right) newptr.push(p->right);
-                }
-                else {
-                    if(p->right) newptr.push(p->right);
-                    if(p->left) newptr.push(p->left);
-                }
+        
+        queue<TreeNode*> pq;
+        pq.push(root);
+        bool ltor = true;
+        while(!pq.empty()) {
+            int nsize = pq.size();
+            vector<int> zig(nsize);
+            for(int i = 0; i < nsize; i++) {
+                TreeNode* p = pq.front();
+                pq.pop();
+                
+                int index = ltor ? i : (nsize - 1 - i); 
+                zig[index] = p->val;
+                if(p->left) pq.push(p->left);
+                if(p->right) pq.push(p->right);
             }
-            n += 1;
+            ltor = !ltor;
             res.push_back(zig);
-            ptr = newptr;
         }
         return res;
     }
