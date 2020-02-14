@@ -10,14 +10,22 @@
 class Solution {
 public:
     int rob(TreeNode* root) {
+        map<TreeNode*, int> robmap;
+        return subrob(root, robmap);
+    }
+    
+    int subrob(TreeNode* root, map<TreeNode*, int> & robmap) {
         if(root == NULL) return 0;
+        if(robmap.find(root) != robmap.end()) return robmap.find(root)->second;
         
         int val = 0;
         if(root->left)
-            val += rob(root->left->left) + rob(root->left->right);
+            val += subrob(root->left->left, robmap) + subrob(root->left->right, robmap);
         if(root->right)
-            val += rob(root->right->left) + rob(root->right->right);
-        return max(root->val + val, rob(root->left) + rob(root->right));
-
+            val += subrob(root->right->left, robmap) + subrob(root->right->right, robmap);
+        val = max(root->val + val, subrob(root->left, robmap) + subrob(root->right, robmap));
+        
+        robmap.insert(pair<TreeNode*, int>(root, val));
+        return val;
     }
 };
