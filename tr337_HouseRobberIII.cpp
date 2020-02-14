@@ -10,22 +10,19 @@
 class Solution {
 public:
     int rob(TreeNode* root) {
-        map<TreeNode*, int> robmap;
-        return subrob(root, robmap);
+        vector<int> res(2); 
+        res = subrob(root); 
+        return max(res[0], res[1]);
     }
-    
-    int subrob(TreeNode* root, map<TreeNode*, int> & robmap) {
-        if(root == NULL) return 0;
-        if(robmap.find(root) != robmap.end()) return robmap.find(root)->second;
+    vector<int> subrob(TreeNode* root) {
+        vector<int> val(2, 0);
+        if(root == NULL) return val;
         
-        int val = 0;
-        if(root->left)
-            val += subrob(root->left->left, robmap) + subrob(root->left->right, robmap);
-        if(root->right)
-            val += subrob(root->right->left, robmap) + subrob(root->right->right, robmap);
-        val = max(root->val + val, subrob(root->left, robmap) + subrob(root->right, robmap));
-        
-        robmap.insert(pair<TreeNode*, int>(root, val));
+        vector<int> left = subrob(root->left); 
+        vector<int> right = subrob(root->right); 
+        //valwithoutrootincluded val[0]; valwithrootincluded val[1]
+        val[1] = root->val + left[0] + right[0];
+        val[0] = max(left[0], left[1]) + max(right[0], right[1]);
         return val;
     }
 };
