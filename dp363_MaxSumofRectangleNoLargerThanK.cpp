@@ -19,7 +19,7 @@ public:
                     // 已经保存i之前的累加acc_i，如果acc_i+val[i]后还小于或等于k，类似上一行注释；
                     // 如果acc_i+val[i]大于k，找到最大的j之前的累加acc_j恰好不小于(>=)acc_i+val[i]-k
                     if(it != sumfrominit.end()) wmax = max(wmax, acc - *it);
-                    if(wmax == k) return k;
+//                     if(wmax == k) return k;
                     sumfrominit.insert(acc);
                 }
                 sum = max(sum, wmax);
