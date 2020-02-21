@@ -1,11 +1,8 @@
 class LRUCache {
 private:
-    struct im {
-        int key, val;
-        im(int k, int v): key(k), val(v){}
-    };
-    list<im> lst;  //在最后放最新使用过的item
-    typedef unordered_map<int, list<im>::iterator> umap;  //查找迅速
+    list<int> lst;  //在最后放最新使用过的key
+    typedef unordered_map<int, pair<int, list<int>::iterator>> umap;  
+    //查找迅速; key, <value, pointkey>
     umap mp;
     int vol;
     
@@ -16,32 +13,30 @@ public:
     int get(int key) {
         auto it = mp.find(key);
         if(it == mp.end()) return -1;
-        mp[key] = update(it->second);  //it 是迭代器的指针
-        return mp[key]->val;
+        update(it);  //it 是迭代器的指针
+        return it->second.first;
     }
     
     void put(int key, int value) {
         auto it = mp.find(key);
         if(it != mp.end()) {
-            mp[key] = update(it->second);
-            mp[key]->val = value;
+            update(it);
+            it->second.first = value;
         }
         else {
-            if(mp.size() < vol) {
-                mp[key] = lst.insert(lst.end(), im(key, value));
+            if(mp.size() == vol) {
+                mp.erase(lst.back());  //参数为key
+                lst.pop_back();
             }
-            else {
-                mp.erase(lst.front().key);
-                lst.pop_front();
-                mp[key] = lst.insert(lst.end(), im(key, value));
-            }
+            lst.push_front(key);
+            mp[key] = pair<int, list<int>::iterator>(value, lst.begin());
         }
     }
     
-    list<im>::iterator update(list<im>::iterator it) {
-        list<im>::iterator newit = lst.insert(lst.end(), *it);
-        lst.erase(it);
-        return newit;
+    void update(umap::iterator it) {
+        lst.erase(it->second.second);  //参数为list的迭代器
+        lst.push_front(it->first);
+        it->second.second = lst.begin();
     }
 };
 
