@@ -2,21 +2,19 @@ class Solution {
 public:
     bool isValid(string s) {
         if(s.size() % 2) return false;
-        stack<char> brk;
-        for(int i = 0; i < s.size(); i++) {
-            if(s[i] == '(' || s[i] == '[' || s[i] == '{') 
-                brk.push(s[i]);
+        stack<char> st;
+        for(char b : s){
+            if(b == '(' || b == '{' || b == '[') {
+                st.push(b);
+            }
             else {
-                if(brk.empty()) return false;
-                char l = brk.top();
-                brk.pop();
-                if((s[i] == ')' && l == '(') || (s[i] == ']' && l == '[') || (s[i] == '}' && l == '{')) 
-                    continue;
-                else 
-                    return false;
+                if(st.empty()) return false;
+                if(b == ')' && st.top() != '(') return false;
+                if(b == '}' && st.top() != '{') return false;
+                if(b == ']' && st.top() != '[') return false;
+                st.pop();
             }
         }
-        if(!brk.empty()) return false;
-        return true;
+        return st.empty();
     }
 };
