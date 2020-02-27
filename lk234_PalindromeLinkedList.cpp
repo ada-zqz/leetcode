@@ -9,14 +9,22 @@
 class Solution {
 public:
     bool isPalindrome(ListNode* head) {
-        vector<int> lk;
-        while(head) {
-            lk.push_back(head->val);
-            head = head->next;
+        ListNode *slow = head, *fast = head, *pre = nullptr, *tmp;
+        while(fast && fast->next) {
+            // find middle position
+            fast = fast->next->next;
+            // reverse slow
+            tmp = slow->next;
+            slow->next = pre;
+            pre = slow;
+            slow = tmp;
         }
-        int len = lk.size();
-        for(int i = 0; i < len / 2; i++) {
-            if(lk[i] != lk[len - i -1]) return false;
+        fast = !fast ? slow : slow->next;
+        slow = pre;
+        while(slow) {
+            if(slow->val != fast->val) return false;
+            slow = slow->next;
+            fast = fast->next;
         }
         return true;
     }
