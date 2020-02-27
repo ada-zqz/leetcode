@@ -2,32 +2,39 @@ class Solution {
 public:
     int findKthLargest(vector<int>& nums, int k) {
         int len = nums.size();
-        for(int i = len/2 - 1; i >= 0; i--) {
-            //建最大堆
-            siftdown(i, nums);
-        }
-        int tmp;
-        for(int i = 1; i <= k; i++) {
-            tmp = nums[0];  //最大元素
-            nums[0] = nums[len - i];
-            nums.pop_back();
-            siftdown(0, nums);
-        }
-        return tmp;
-    }
-    void siftdown(int i, vector<int>& nums) {
-        int len = nums.size();
-        int j = 2 * i + 1;  //父节点i的关键值较小的子节点
-        int tmp = nums[i];  //保存父节点
-        while(j < len) {
-            if(j < len - 1 && (nums[j] < nums[j + 1])) j++;  //取最大值
-            if(tmp < nums[j]) {
-                nums[i] = nums[j];
-                i = j;
-                j = 2 * j + 1;
+        int bg = 0, end = len - 1;
+        pair<int, int> v = quicksort(nums, bg, end);
+        while(v.first != k - 1) {
+            if(v.first >= k) {
+                end = v.first - 1;
+                v = quicksort(nums, bg, end);
             }
-            else break;
+            else {
+                // v.first < k - 1;
+                bg = v.first + 1;
+                v = quicksort(nums, bg, end);
+            }    
         }
-        nums[i] = tmp;
+        return v.second;
     }
+    pair<int, int> quicksort(vector<int>& nums, int bg, int end) {
+        //快速排序，逆序
+        int cmp = nums[end];  //取最后一个数为轴值
+        int l = bg, r = end;
+        while(l != r) {
+            while(l < r && nums[l] >= cmp) l++;
+            if(l < r) {
+                nums[r] = nums[l];
+                r--;
+            }
+            while(l < r && nums[r] <= cmp) r--;
+            if(l < r) {
+                nums[l] = nums[r];
+                l++;
+            }
+        }
+        nums[l] = cmp;
+        return pair<int, int>(l, cmp);
+    }
+    
 };
