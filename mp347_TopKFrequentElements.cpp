@@ -4,18 +4,14 @@ public:
         unordered_map<int, int> mp;
         for(auto n: nums) mp[n]++;  //(key, value): (num, count)
         
-        vector<vector<int>> count(nums.size() + 1); //count: num
-        for(auto m: mp) count[m.second].push_back(m.first);
+        priority_queue<pair<int, int>> pq; //(count, num);
+        for(auto m: mp) pq.push(make_pair(m.second, m.first));        
         
         vector<int> res;
-        for(int i = nums.size(); i >= 1 && res.size() < k; i--) {
-            if(count[i].size() > 0) { //count[i].size() > 0 放到上一行判断出错
-                for(int j: count[i]) {
-                    res.push_back(j);
-                    if(res.size() == k) break;
-                }
-            }
-            
+        while(res.size() < k) {
+            pair<int, int> p = pq.top();
+            pq.pop();
+            res.push_back(p.second);
         }
         return res;        
     }
