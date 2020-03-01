@@ -18,15 +18,13 @@ public:
     }
     void dfs(TreeNode* root, vector<int> prev, int sum, int& res) {
         if(!root) return;
-        vector<int> v;
-        v.push_back(root->val);
-        if(root->val == sum) res++;
-        for(int pre: prev) {
-            int vnew = root->val + pre;
-            v.push_back(vnew);
-            if(vnew == sum) res++;
+        for(int i = 0; i < prev.size(); i++) {
+            prev[i] += root->val;
+            if(prev[i] == sum) res++;
         }
-        dfs(root->left, v, sum, res);
-        dfs(root->right, v, sum, res);
+        prev.push_back(root->val);
+        if(root->val == sum) res++;
+        dfs(root->left, prev, sum, res);
+        dfs(root->right, prev, sum, res);
     }
 };
