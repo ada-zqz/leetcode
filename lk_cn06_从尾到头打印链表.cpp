@@ -10,13 +10,18 @@ class Solution {
 public:
     vector<int> reversePrint(ListNode* head) {
         vector<int> ans;
+        ListNode* pre = NULL;
         while(head != NULL) {
+            ListNode* tmp = head->next;
+            head->next = pre;
+            pre = head;
+            head = tmp;
+        }
+        head = pre;
+        while(head) {
             ans.push_back(head->val);
             head = head->next;
         }
-        int len = ans.size();
-        vector<int> res(len);
-        for(int i = 0; i < len; i++) res[len - i - 1] = ans[i];
-        return res;
+        return ans;
     }
 };
