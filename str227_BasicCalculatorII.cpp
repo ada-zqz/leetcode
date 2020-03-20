@@ -3,16 +3,16 @@ public:
     int calculate(string s) {
         stringstream iostr("+" + s);
         char op;
-        int n, pre, now, ans = 0;
+        int n, pre, ans = 0;
         while(iostr >> op >> n) {
             if(op == '+' || op == '-') {
                 pre = op == '+' ? n : - n;
                 ans += pre;
             }
             else {
-                now = op == '*' ? pre * n : pre / n;
-                ans += now - pre;
-                pre = now;
+                ans -= pre;
+                pre = op == '*' ? pre * n : pre / n;
+                ans += pre;
             }
         }
         return ans;
