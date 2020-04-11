@@ -1,24 +1,17 @@
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        priority_queue<pair<int, int>> pq;
-        int n = nums.size();
+        // Monotonic Queue
+        deque<int> dq;  //可以存储数值，也可以存储index
         vector<int> res;
-        int ans = 1 << 31;
-        if(k >= n) {
-            for(int i: nums) ans = max(ans, i);
-            res.push_back(ans);
-            return res;
-        }
-        for(int i = 0; i < n; i++) {
-            pq.push({nums[i], i});
-            if(i < k - 1) continue;
-            auto mx = pq.top();
-            while(mx.second < i - k + 1) {
-                pq.pop();
-                mx = pq.top();
-            }
-            res.push_back(mx.first);
+        for(int i = 0; i < nums.size(); i++) {
+            // 最大值在window外
+            if(!dq.empty() && dq.front() == i - k) dq.pop_front();
+            // 比新出现的值小的值没有用处
+            while(!dq.empty() && nums[dq.back()] < nums[i]) dq.pop_back();
+            dq.push_back(i);
+            // 最大的放在front
+            if(i >= k - 1) res.push_back(nums[dq.front()]);
         }
         return res;
     }
