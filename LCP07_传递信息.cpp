@@ -1,43 +1,12 @@
 class Solution {
+    int f[6][11];
 public:
     int numWays(int n, vector<vector<int>>& relation, int k) {
-        unordered_map<int, vector<int>> mp;
-        for(auto r: relation) {
-            if(mp.find(r[0]) == mp.end()) {
-                vector<int> v;
-                v.push_back(r[1]);
-                mp.insert(pair<int, vector<int>>(r[0], v));
-            }
-            else mp[r[0]].push_back(r[1]);
+        memset(f, 0, sizeof(f));
+        f[0][0]=1;
+        for(int i = 0; i < k; i++) {
+            for(auto r: relation) f[i + 1][r[1]] += f[i][r[0]];
         }
-        queue<int> now;
-        now.push(0);
-        int step = 0;
-        int res = 0;
-        while(!now.empty()) {
-            if(step == k) {
-                while(!now.empty()) {
-                    int pp = now.front();
-                    now.pop();
-                    // cout << pp << " ";
-                    if(pp == n - 1) res++;
-                }
-                return res;
-            }
-            step++;
-            // if(step > k) break;
-            queue<int> next;
-            while(!now.empty()){
-                int p = now.front();
-                now.pop();
-                if(mp.find(p) != mp.end()) {
-                    for(auto pp: mp[p]) {
-                        next.push(pp);
-                    }
-                }
-            }
-            swap(now, next);
-        }
-        return 0;
+        return f[k][n-1];
     }
 };
