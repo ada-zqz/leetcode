@@ -1,14 +1,13 @@
 class Solution {
 public:
     bool canConstruct(string ransomNote, string magazine) {
-        unordered_map<char, int> mp;
+        vector<int> ds(26, 0);
         for(char m: magazine) {
-            if(mp.find(m) == mp.end()) mp.insert({m, 1});
-            else mp[m]++;
+            ds[m - 'a']++;
         }
         for(char r: ransomNote) {
-            if(mp.find(r) == mp.end() || mp[r] == 0) return false;
-            else mp[r]--;
+            if(ds[r - 'a'] == 0) return false;
+            else ds[r - 'a']--;
         }
         return true;
     }
