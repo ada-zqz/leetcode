@@ -1,13 +1,12 @@
 class Solution {
 public:
     int minStartValue(vector<int>& nums) {
-        int vmin = nums[0];
-        int sm = nums[0];
-        for(int i = 1; i < nums.size(); i++) {
+        int vmin = 0;
+        int sm = 0;
+        for(int i = 0; i < nums.size(); i++) {
             sm = sm + nums[i];
-            vmin = min(vmin, sm);
+            vmin = max(vmin, -sm);
         }
-        if(vmin >= 1) return 1;
-        return 1 - vmin;
+        return 1 + vmin;
     }
 };
