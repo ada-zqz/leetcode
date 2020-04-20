@@ -1,76 +1,25 @@
 class Solution {
 public:
     string getHappyString(int n, int k) {
-        vector<int> dp(n + 1, 0);
-        dp[1] = 3;
-        for(int i = 2; i <= n; i++) dp[i] = dp[i - 1] * 2;
-        string res = "";
-        if(k > dp[n]) return res;
-        
-        vector<string> next(3);
-        next[0] = "a";
-        next[1] = "b";
-        next[2] = "c";
-        int m = n;
-        int tmp = dp[n];
-        while(n > 0) {
-            if(n == m) {
-                tmp = tmp / 3;
-                if(k <= tmp) {
-                    res += "a";
-                    next[0] = "b";
-                    next[1] = "c";
-                }
-                else if(k <= 2 * tmp) {
-                    res += "b";
-                    k -= tmp;
-                    next[0] = "a";
-                    next[1] = "c";
-                }
-                else {
-                    res += "c";
-                    k -= 2 * tmp;
-                    next[0] = "a";
-                    next[1] = "b";
-                }
+        int msk = 1;
+        for(int i = 0; i < n; i++) msk *= 3;
+        vector<string> possible;
+        for(int i = 0; i < msk; i++){
+            string cur;
+            int v = i;
+            for(int j = 0; j < n; j++){
+                cur.push_back((v % 3) + 'a');
+                v /= 3;
             }
-            else {
-                tmp = tmp / 2;
-                if(k <= tmp) {
-                    res += next[0];
-                    if(next[0] == "a") {
-                        next[0] = "b";
-                        next[1] = "c";
-                    }
-                    else if(next[0] == "b") {
-                        next[0] = "a";
-                        next[1] = "c";
-                    }
-                    else if(next[0] == "c") {
-                        next[0] = "a";
-                        next[1] = "b";
-                    }
-                }
-                else {
-                    res += next[1];
-                    if(next[1] == "a") {
-                        next[0] = "b";
-                        next[1] = "c";
-                    }
-                    else if(next[1] == "b") {
-                        next[0] = "a";
-                        next[1] = "c";
-                    }
-                    else if(next[1] == "c") {
-                        next[0] = "a";
-                        next[1] = "b";
-                    }
-                    k -= tmp;
-                }
-                
-            }
-            n--;
+            bool bad = false;
+            for(int j = 0; j + 1 < n; j++)
+                if(cur[j] == cur[j + 1])
+                    bad = true;
+            if(!bad)
+                possible.push_back(cur);
         }
-        return res;
+        sort(possible.begin(), possible.end());
+        if(possible.size() < k) return "";
+        return possible[k - 1];
     }
 };
