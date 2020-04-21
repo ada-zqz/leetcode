@@ -12,16 +12,9 @@ public:
         if(abs(r) > 1) return res;
         if(r < 0) swap(res1, res2);
         int i;
-        for(i = 0; i < res1.size() - 1; i++) {
-            res += res1[i];
-            res += res2[i];
-        }
-        if(r == 0) {
-            res += res1[i];
-            res += res2[i];
-        }
-        else {
-            res += res1[i];
+        for(i = 0; i < s.size(); i++) {
+            if(i % 2 == 0) res += res1[i / 2];
+            else res += res2[i / 2];
         }
         return res;
     }
