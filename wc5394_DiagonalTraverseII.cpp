@@ -3,20 +3,24 @@ public:
     vector<int> findDiagonalOrder(vector<vector<int>>& nums) {
         vector<int> res;
         int n = nums.size();
-        int m = nums[0].size();
-        int jmax = 0, imax = 0;
+        int jmax = 0;
+        vector<int> vl(n);
+        set<int, greater<int>> pbi;
         for(int i = 0; i < n; i++) {
-            if(nums[i].size() - 1 + i > jmax) {
-                jmax = nums[i].size() - 1 + i;
-                imax = i;
+            vl[i] = nums[i].size() - 1;
+            if(vl[i] + i > jmax) {
+                jmax = vl[i] + i;
             }
+            pbi.insert(i);
         }
+        // cout << n << " " << jmax << endl;
         for(int j = 0; j <= jmax; j++) {
-            for(int i = n - 1; i >= 0; i--) {
+            for(auto i: pbi) {
                 if(i <= j) {
-                    if(nums[i].size() - 1 < j - i) continue;
-                    else res.push_back(nums[i][j - i]);                    
+                    if(vl[i] + i < j) pbi.erase(i);
+                    else res.push_back(nums[i][j - i]); 
                 }
+                 
             }
         }
         return res;
