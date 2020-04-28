@@ -1,15 +1,15 @@
 class Solution {
 public:
-    int maxScore(vector<int>& cardPoints, int k) {
-        int n = cardPoints.size();
-        vector<int> sm(n + 1, 0);
-        for(int i = 1; i <= n; i++) {
-            sm[i] = sm[i - 1] + cardPoints[i - 1];
+    int maxScore(vector<int>& p, int k) {
+        int su = 0, mx = 0, s = p.size();
+        for(int i=0; i<k; ++i) su += p[i];
+        mx = max(mx, su);
+        for(int i=0; i<k; ++i)
+        {
+            su -= p[k-i-1];
+            su += p[s-i-1];
+            mx = max(mx, su);
         }
-        int res = 0;
-        for(int i = 0; i <= k; i++) {
-            res = max(res, sm[i] + sm[n] - sm[n - k + i]);
-        }
-        return res;
+        return mx;
     }
 };
