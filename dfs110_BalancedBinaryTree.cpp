@@ -10,17 +10,17 @@
 class Solution {
 public:
     bool isBalanced(TreeNode* root) {
-        return isok(root);
+        bool isok = true;
+        height(root, isok);
+        return isok;
     }
-    bool isok(TreeNode* root) {
-        if(!root) return true;
-        if(isok(root->left) && isok(root->right) && abs(height(root->left) - height(root->right)) <= 1) return true;
-        return false;
-    }
-    int height(TreeNode* root) {
+    int height(TreeNode* root, bool& isok) {
+        if(!isok) return -1;
+        // isok = true
         if(!root) return 0;
-        int left = height(root->left);
-        int right = height(root->right);
+        int left = height(root->left, isok);
+        int right = height(root->right, isok);
+        if(abs(left - right) > 1) isok = false;
         return max(left, right) + 1;
     }
 };
