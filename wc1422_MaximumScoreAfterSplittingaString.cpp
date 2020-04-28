@@ -1,23 +1,14 @@
 class Solution {
 public:
     int maxScore(string s) {
-        int res = 0;
-        int n = s.size();
-        vector<int> dp1(n + 1, 0);
-        vector<int> dp2(n + 1, 0);
-        for(int i = 1; i < n; i++) {
-            if(s[i - 1] == '0') {
-                dp1[i] = dp1[i - 1] + 1;
-            }
-            else dp1[i] = dp1[i - 1];
-            if(s[n - i] == '1') {
-                dp2[n - i] = dp2[n - i + 1] + 1;
-            }
-            else dp2[n - i] = dp2[n - i + 1];
+        int c0 = 0, c1 = 0, ans = 0;
+        for(auto c: s) c1 += c == '1';
+        for(int i = 0; i + 1 < s.size(); ++i)
+        {
+            c1 -= s[i] == '1';
+            c0 += s[i] == '0';
+            ans = max(ans, c0 + c1);
         }
-        for(int i = 1; i < n; i++) {
-            res = max(res, dp1[i] + dp2[i]);
-        }
-        return res;
+        return ans;
     }
 };
