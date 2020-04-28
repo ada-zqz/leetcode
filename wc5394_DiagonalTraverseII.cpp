@@ -9,8 +9,8 @@ public:
                 mp[i + j].push_back(nums[i][j]);  // 相同i+j，从j小的开始排序
             }
         }
-        for(auto m: mp) {
-            for(auto x: m.second) res.push_back(x);
+        for(auto & m: mp) {
+            for(auto & x: m.second) res.push_back(x);
         }
         return res;
     }
