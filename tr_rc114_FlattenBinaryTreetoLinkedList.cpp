@@ -15,10 +15,10 @@ public:
     void flatten(TreeNode* root) {
         if(!root) return;
         // 怎么把左右flatten后的接起来？  多设一个指针，指向变为list的树的root
-        flatten(root->left);
-        flatten(root->right);
-        root->left = pre;
-        root->right = NULL;
+        flatten(root->right);  // 变成右子树一链
+        flatten(root->left);   // 右子树flatten好了以后，要接到左子树，左子树再变为右子树
+        root->right = pre;
+        root->left = NULL;
         // root已经排好
         pre = root;
     }
