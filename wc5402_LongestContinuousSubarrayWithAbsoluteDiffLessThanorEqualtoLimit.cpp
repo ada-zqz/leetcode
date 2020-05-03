@@ -11,8 +11,9 @@ public:
                 int diff = abs(nums[i] - nums[j]);
                 now[i] = max(now[i + 1], max(pre[i], diff));
                 if(now[i] <= limit) res = max(res, j - i + 1);
+                else break;
             }
-            pre = now;
+            swap(pre, now);
         }
         return res;
     }
