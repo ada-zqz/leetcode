@@ -10,10 +10,10 @@ public:
             auto p = *mp.begin();
             mp.erase(mp.begin());
             res.push_back(p.first);
-            for(int i = p.second[1] + 1; i < n; i++) 
-                mp.insert({matrix[p.second[0]][i], vector<int>{p.second[0], i}});
-            for(int i = p.second[0] + 1; i < m; i++) 
-                mp.insert({matrix[i][p.second[1]], vector<int>{i, p.second[1]}});
+            if(p.second[1] + 1 < n) 
+                mp.insert({matrix[p.second[0]][p.second[1] + 1], vector<int>{p.second[0], p.second[1] + 1}});
+            if(p.second[0] + 1 < m) 
+                mp.insert({matrix[p.second[0] + 1][p.second[1]], vector<int>{p.second[0] + 1, p.second[1]}});
         }
         return res[k - 1];
     }
