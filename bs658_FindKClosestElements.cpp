@@ -2,39 +2,18 @@ class Solution {
 public:
     vector<int> findClosestElements(vector<int>& arr, int k, int x) {
         int n = arr.size();
-        int pos = 0;
-        int diff = abs(arr[0] - x);
-        for(int i = 1; i < n; i++) {
-            int d = abs(arr[i] - x);
-            if(d < diff) {
-                diff = d;
-                pos = i;
-            }
+        int lo = 0, hi = n - k; //输出数组的起点
+        while(lo < hi) {
+            int mid = (lo + hi) / 2;
+            // 若输出是[mid, mid + k - 1]，即这个范围包括了x，且x=mid or mid+k-1都可能
+            // --- mid --- mid + k - 1 --- mid + k ---- x -----
+            // --- mid ---------- x -- mid + k - 1 ---- mid + k ---- x更靠近mid+k,mid往右移
+            // --- mid -- x ---------- mid + k - 1 ---- mid + k ---- x更靠近mid,mid往左移
+            // ----- x --- mid --- mid + k - 1 --- mid + k ---- 
+            if((x - arr[mid]) > (arr[mid + k] - x)) lo = mid + 1; // hi>lo,mid+k不会超出范围
+            //mid+k更改取近范围，所以mid应该往右移
+            else hi = mid;
         }
-        deque<int> res; 
-        res.push_back(arr[pos]);
-        int nl = 1, nr = 1;
-        while(res.size() < k) {
-            int dr, dl;
-            if(pos + nr < n) {
-                dr = abs(arr[pos + nr] - x);
-            }
-            else dr = INT_MAX;
-            if(pos - nl >= 0) {
-                dl = abs(arr[pos - nl] - x);
-            }
-            else dl = INT_MAX;
-            if(dl <= dr) {
-                res.push_front(arr[pos - nl]);
-                nl++;
-            }
-            else {
-                res.push_back(arr[pos + nr]);
-                nr++;
-            }       
-        }
-        vector<int> ans;
-        for(auto i: res) ans.push_back(i);
-        return ans;
+        return vector<int>(arr.begin() + lo, arr.begin() + lo + k);
     }
 };
