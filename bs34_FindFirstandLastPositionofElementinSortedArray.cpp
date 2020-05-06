@@ -8,19 +8,18 @@ public:
         while(lo < hi) {
             int mid = (lo + hi) / 2;
             if(nums[mid] >= target) hi = mid;
-            else lo = mid + 1;
+            else lo = mid + 1;  // nums[mid] < target
         }
         if(nums[lo] != target) return res;
         res[0] = lo;
-        lo = 0, hi = n - 1;
+        // lo = lo
+        hi = n - 1;
         while(lo < hi) {
-            int mid = (lo + hi) / 2;
-            if(nums[mid] <= target) lo = mid + 1;
-            else hi = mid;
+            int mid = (lo + hi) / 2 + 1;  // 0,1求mid为1
+            if(nums[mid] == target) lo = mid;
+            else hi = mid - 1;  // nums[mid] > target  因为lo从上面得到的res[0]开始
         }
-        if(nums[hi] == target)
-            res[1] = hi;
-        else if(hi - 1 >= 0 && nums[hi - 1] == target) res[1] = hi - 1;
+        res[1] = hi;
         return res;
     }
 };
