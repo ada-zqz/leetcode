@@ -4,7 +4,8 @@ public:
         vector<vector<int>> res;
         int n = nums.size();
         sort(nums.begin(), nums.end());
-        if(n == 0 || 4 * nums[0] > target || 4 * nums[n - 1] < target) return res;
+        if(n < 4 || 4 * nums[0] > target || 4 * nums[n - 1] < target) return res;
+        
         // 先算出两两相加的值
         unordered_map<int, set<pair<int, int>>> mp;  //sum, (i,j)
         for(int i = 0; i < n - 1; i++) {
@@ -20,11 +21,11 @@ public:
                 if(mp.find(target - cd) != mp.end()) {
                     auto st = mp[target - cd];
                     for(auto s: st) {
-                        // index不重复
-                        if(s.first > i && s.first != j && s.second != j) {
+                        // index不重复，最终结果不重复
+                        // i < j < s.f < s.s
+                        if(s.first > j) {
                             v = vector<int>{nums[i], nums[j], nums[s.first], nums[s.second]};          
                             sort(v.begin(), v.end());
-                            // 最终结果不重复
                             ans.insert(v);
                         }
                                           
