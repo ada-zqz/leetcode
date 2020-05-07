@@ -1,30 +1,44 @@
 class Solution {
 public:
     vector<int> threeEqualParts(vector<int>& A) {
-        long long a = 0;
+        deque<int> a;
         int n = A.size();
         for(int i = 0; i < n - 2; i++) {
-            a = (a << 1) + A[i];
-            long long c = 0;
+            a.push_back(A[i]);
+            deque<int> c;
             for(int j = n - 1; j > i + 1; j--) {
-                if(A[j]) c += 1 << (n - j - 1);
-                if(c > a) break;
-                else if(c < a) {
+                c.push_front(A[j]);
+                int iseq = isequal(a, c);
+                if(iseq < 0) break;   // c > a
+                else if(iseq > 0) {
                     continue;
                 }
                 else {
                     // a==c
-                    long long b = 0;
+                    deque<int> b;
                     for(int k = j - 1; k >= i + 1; k--) {
-                        if(A[k]) b += 1 << (j - 1 - k);
-                        if(b > a) break;
+                        b.push_front(A[k]);
+                        if(isequal(a, b) < 0) break;  // a < b
                     }
-                    if(a == b) {
+                    if(isequal(a, b) == 0) {
                         return vector<int> {i, j};
                     }
                 }
             }
         }
         return vector<int> {-1, -1};
+    }
+    int isequal(deque<int>& a, deque<int> b) {
+        // equal: 0
+        // a > b: 1; a < b: -1
+        while(!a.empty() && a.front() == 0) a.pop_front();
+        while(!b.empty() && b.front() == 0) b.pop_front();
+        if(a.size() > b.size()) return 1;
+        if(a.size() < b.size()) return -1;
+        for(int i = 0; i < a.size(); i++) {
+            if(a[i] > b[i]) return 1;
+            else if(a[i] < b[i]) return -1;
+        }
+        return 0;
     }
 };
