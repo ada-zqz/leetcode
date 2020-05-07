@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<int> threeEqualParts(vector<int>& A) {
+        long long a = 0;
+        int n = A.size();
+        for(int i = 0; i < n - 2; i++) {
+            a = (a << 1) + A[i];
+            long long c = 0;
+            for(int j = n - 1; j > i + 1; j--) {
+                if(A[j]) c += 1 << (n - j - 1);
+                if(c > a) break;
+                else if(c < a) {
+                    continue;
+                }
+                else {
+                    // a==c
+                    long long b = 0;
+                    for(int k = j - 1; k >= i + 1; k--) {
+                        if(A[k]) b += 1 << (j - 1 - k);
+                        if(b > a) break;
+                    }
+                    if(a == b) {
+                        return vector<int> {i, j};
+                    }
+                }
+            }
+        }
+        return vector<int> {-1, -1};
+    }
+};
