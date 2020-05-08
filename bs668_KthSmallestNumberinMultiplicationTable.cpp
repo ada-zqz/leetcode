@@ -11,16 +11,9 @@ public:
                 if(j == 0) break;
                 cnt += j;
             }
-            if(cnt > k) hi = mid; //mid-1有误，因为等于mid的可能有好几个，导致[lo, mid-1]的cnt<k  
-            else if(cnt < k) lo = mid + 1;
-            else {
-                // cnt == k
-                if(lo == mid) return lo; //[lo(mid), hi]，mid就是最小的
-                else {
-                    //[lo, mid, hi], [lo, mid]区间内一定有cnt<=k
-                    hi = mid;
-                }
-            }
+            if(cnt >= k) hi = mid; //mid-1有误，因为等于mid的可能有好几个，导致[lo, mid-1]的cnt<k  
+            //[lo, mid, hi], [lo, mid]区间内一定有cnt<=k；若lo=mid，跳出循环
+            else lo = mid + 1;
         }
         return lo; 
     }
