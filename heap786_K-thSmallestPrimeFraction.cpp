@@ -21,8 +21,8 @@ public:
         for(int i = 0; i < K - 1; i++) {
             a = pq.top();  // 最小的元素
             pq.pop();
-            if(a[1] - 1 > a[0]) {
-                a[1]--;
+            if(--a[1] > a[0]) {
+                // a[1]--;
                 pq.push(a);
             }
         }
@@ -30,3 +30,5 @@ public:
         return vector<int> {A[a[0]], A[a[1]]};
     }
 };
+
+// 时间复杂度 O((n + K) * logn)
