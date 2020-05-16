@@ -1,20 +1,14 @@
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
-        vector<int> bt(32, 0);
-        // 32位出现多少次1
-        for(int a: nums) {
-            for(int i = 0; i < 32; i++) {
-                int b = a & 1; 
-                if(b) bt[i]++;  //i位为1，bt[i]++
-                a = a >> 1;
-            }
+        int x1 = 0, x2 = 0, mask;
+        for(int i: nums) {
+            x2 ^= x1 & i;       // 都为1的位进位
+            x1 ^= i;
+            mask = ~(x1 & x2);  // 出现三次，二进制的3: 11; 出现3次mask=0
+            x2 &= mask;
+            x1 &= mask;
         }
-        int res = 0;
-        for(int i = 0; i < 32; i++) {
-            int b = bt[i] % 3;  //出现3次归0
-            res += b << i;
-        }
-        return res;
+        return x1;
     }
 };
