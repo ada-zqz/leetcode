@@ -2,6 +2,7 @@
 vector<string> st;
 sort(st.begin(), st.end(), [](string &a, string &b){return a.size() < b.size();});
 
+//------------------------
 vector<int>& A;
 // 自定义比较的函数，并且利用引用减少调用时间
 // 比较 (Compare) 形参的定义，使得若其第一参数在弱序中先于其第二参数则返回 true 。(a, b) a<b为true返回a
@@ -13,3 +14,14 @@ auto cmp = [&A](vector<int>& a, vector<int>& b) {
 };  // 需要分号结尾
 priority_queue<vector<int>, vector<vector<int>>, decltype(cmp)> pq(cmp);
 
+//-------------------------
+// http://www.cplusplus.com/reference/set/multiset/multiset/
+struct classcomp {
+  bool operator() (const int& lhs, const int& rhs) const
+  {return lhs<rhs;}
+};
+multiset<int,classcomp> fifth;                // class as Compare
+
+bool fncomp (int lhs, int rhs) {return lhs<rhs;}
+bool(*fn_pt)(int,int) = fncomp;
+multiset<int,bool(*)(int,int)> sixth (fn_pt); // function pointer as Compare
