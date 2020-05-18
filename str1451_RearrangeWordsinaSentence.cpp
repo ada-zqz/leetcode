@@ -1,18 +1,23 @@
 class Solution {
 public:
-    struct cmp{
-        bool operator()(pair<string, int> &a, pair<string, int> &b) {
-            // 字符串长度小的在前面，长度相同的保持原来list中的相对位置
-            if(a.first.size() != b.first.size()) return a.first.size() < b.first.size();
-            return a.second < b.second;
-        }
-    };
+    // 比较类
+    // struct cmp{
+    //     bool operator()(pair<string, int> &a, pair<string, int> &b) {
+    //         if(a.first.size() != b.first.size()) return a.first.size() < b.first.size();
+    //         return a.second < b.second;
+    //     }
+    // };
+    // 外部比较函数，这里static必须加
+    static bool cmp(pair<string, int> &a, pair<string, int> &b) {
+        if(a.first.size() != b.first.size()) return a.first.size() < b.first.size();
+        return a.second < b.second;
+    }
     string arrangeWords(string text) {
         int n = text.size();
-        string res;
+        string res, ans;
         text[0] = tolower(text[0]);  
-        vector<pair<string, int>> st; // 字符串，原来的相对位置
-        string s; // 按空格提取的字符串
+        vector<pair<string, int>> st;
+        string s;
         for(int i = 0; i < n; i++) {
             s.push_back(text[i]);
             if(i == n - 1) s.push_back(' ');
@@ -21,12 +26,20 @@ public:
                 s = "";
             }
         }
-        sort(st.begin(), st.end(), cmp());
+        // sort(st.begin(), st.end(), cmp());
+        sort(st.begin(), st.end(), cmp);  //不用加()
         for(auto s: st) {
             res += s.first;
         }
         res[0] = toupper(res[0]);
-        res = res.substr(0, res.size() - 1);  // 去掉最后一个数的空格
+        res = res.substr(0, res.size() - 1);
         return res;       
     }
 };
+
+/* 输入
+"Jlhvvd wfwnphmxoa qcuucx qsvqskq cqwfypww dyphntfz hkbwx xmwohi qvzegb ubogo sbdfmnyeim tuqppyipb llwzeug hrsaebveez aszqnvruhr xqpqd ipwbapd mlghuuwvec xpefyglstj dkvhhgecd kry"
+*/
+/* 输出
+"Kry hkbwx ubogo xqpqd jlhvvd qcuucx xmwohi qvzegb qsvqskq llwzeug ipwbapd cqwfypww dyphntfz tuqppyipb dkvhhgecd wfwnphmxoa sbdfmnyeim hrsaebveez aszqnvruhr mlghuuwvec xpefyglstj"
+*/
