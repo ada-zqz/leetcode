@@ -2,6 +2,25 @@
 vector<string> st;
 sort(st.begin(), st.end(), [](string &a, string &b){return a.size() < b.size();});
 
+// 比较类，应用加()
+struct cmp{
+    bool operator()(pair<string, int> &a, pair<string, int> &b) {
+        // 字符串长度小的在前面，长度相同的保持原来list中的相对位置
+        if(a.first.size() != b.first.size()) return a.first.size() < b.first.size();
+        return a.second < b.second;
+    }
+};
+vector<pair<string, int>> st; // 字符串，原来的相对位置
+sort(st.begin(), st.end(), cmp());  //cmp加()
+
+// 外部比较函数，这里static必须加
+static bool cmp(pair<string, int> &a, pair<string, int> &b) {
+    if(a.first.size() != b.first.size()) return a.first.size() < b.first.size();
+    return a.second < b.second;
+}
+vector<pair<string, int>> st; // 字符串，原来的相对位置
+sort(st.begin(), st.end(), cmp);  //不用加()
+
 //------------------------
 vector<int>& A;
 // 自定义比较的函数，并且利用引用减少调用时间
