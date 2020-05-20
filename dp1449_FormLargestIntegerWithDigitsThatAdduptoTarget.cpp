@@ -1,6 +1,6 @@
 class Solution {
 public:
-    // 0-1完全背包问题
+    // 0-1完全背包问题，优化
     string largestNumber(vector<int>& cost, int target) {
         int n = cost.size();
         deque<int> nm;         // 数字，对应的cost各不相同
@@ -22,12 +22,20 @@ public:
             for(j = 0; j <= target; j++) {
                 if(cmp(dp[i][j], dp[i - 1][j])) dp[i][j] = dp[i - 1][j];  //不取第i个
                 // 取第i个可以取target/ct次
-                for(int k = 1; k <= j / ct; k++) {
-                    // 没有下一句，会出现j=target但是实际求和<target的解 "7777"而不是"7772"
-                    if(j - k * ct > 0 && dp[i - 1][j - k * ct] == "") continue; 
-                    string add(k, ss);
-                    string news = add + dp[i - 1][j - k * ct];   //字符从小到大取的
-                    if(cmp(dp[i][j], news)) dp[i][j] = news;     //取j次第i个
+                // for(int k = 1; k <= j / ct; k++) {
+                //     // 没有下一句，会出现j=target但是实际求和<target的解 "7777"而不是"7772"
+                //     if(j - k * ct > 0 && dp[i - 1][j - k * ct] == "") continue; 
+                //     string add(k, ss);
+                //     string news = add + dp[i - 1][j - k * ct];   //字符从小到大取的
+                //     if(cmp(dp[i][j], news)) dp[i][j] = news;     //取j次第i个
+                // }
+                // 优化
+                if(j == ct || (j > ct && dp[i][j - ct] != "")) {
+                    // j>ct, dp[i][j-ct]="" 会导致不是实际求和为j
+                    string news = ss + dp[i][j - ct];
+                    // dp[i][j-w]= max(dp[i-1][j-w],ss+dp[i-1][(j-w)-w],...,(k-1)*s+dp[i-1][j-kw])
+                    // news = max(s+dp[i-1][j-w],...,k*s+dp[i-1][j-kw])
+                    if(cmp(dp[i][j], news)) dp[i][j] = news;
                 }
             }
         }
