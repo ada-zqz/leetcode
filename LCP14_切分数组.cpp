@@ -34,9 +34,10 @@ public:
                 // dp[i] <= dp[j - 1] + i - j + 1;
         O(n^2 lgM) 计算gcd是lg量级
         */
-        /* 优化的动态规划: dp[x]表示到目前为止[0, i]，以素数x为右端的最小划分
-        // [0:2, 1:3, 2:5, ..., n:10] dp[2]=1,dp[3]=f[0]+1=2(前面的数没有大于1的公因子，3只能单独分为一组)
-        // 到10这个数f[n]=min(dp[5]:3, dp[2]:1)
+        /* 优化的动态规划: dp[x]表示到目前为止[0, i]，以素数x为右端后一个数的最小划分
+        // dp[x]代表以素数x为右端的最小划分再更新时有麻烦 [2,3,5,4,2,10,5]
+        // [0:2, 1:3, 2:5, ..., n:10] dp[2]=0,dp[3]=f[0]+1=1(前面的数没有大于1的公因子，3只能单独分为一组)
+        // 到10这个数f[n]=min(dp[5]:2, dp[2]:0) + 1 = 1
         O(nlgM)
         */
         int n = nums.size();
@@ -44,15 +45,15 @@ public:
         // 初始化
         // int vmax = 0;  // 数组中的最大数，存不大于vmax的素数的情况
         // for(int i: nums) vmax = max(vmax, i);
-        // vector<int> dp(vmax + 1, INT_MAX);  //dp[x]以素数x为右端的最小划分数
-        vector<int> dp(vm + 1, INT_MAX);  //dp[x]以素数x为右端的最小划分数
-        vector<int> f(n); //f[i]: 划分[0, i]的最小组数
-        dp[maxdiv[nums[0]]] = 1;
+        // vector<int> dp(vmax + 1, INT_MAX);  //dp[x]以素数x为右端*后一个数*的最小划分数,方便更新dp
+        vector<int> dp(vm + 1, INT_MAX);  //dp[x]以素数x为右端*后一个数*的最小划分数
+        vector<int> f(n, INT_MAX); //f[i]: 划分[0, i]的最小组数
+        dp[maxdiv[nums[0]]] = 0;  //再遇到公因子为x的数i [0,i]化成一份，前面dp[x]份 f[i]= dp[x]+1
         while(nums[0] > 1 && prime.find(nums[0]) == prime.end()) {
             //nums[0]不是素数，可能还有其他质因子
             int prex = maxdiv[nums[0]];            
             while(nums[0] > 1 && nums[0] % prex == 0) nums[0] /= prex; //18=3*3*2
-            if(nums[0] > 1) dp[maxdiv[nums[0]]] = 1;
+            if(nums[0] > 1) dp[maxdiv[nums[0]]] = 0;
         }
         f[0] = 1;
         vector<int> pri; // 质因子
@@ -64,29 +65,22 @@ public:
                 while(nums[i] > 1 && nums[i] % pri.back() == 0) nums[i] /= pri.back();
                 if(nums[i] > 1) pri.push_back(maxdiv[nums[i]]);
             }
-            f[i] = f[i - 1] + 1; //没有这句报错；因为nums[i]可以单独划分，dp[p]不一定小于f[i-1]+1
-            // [2, 3, 5, 7, 2, 7], i:5 dp[7]=4, f[4]=dp[2]=1, f[5]=f[4]+1=2 not 4
+            // 因为nums[i]可以单独划分，dp[p]+1不一定小于f[i-1]+1
+            // [2, 3, 5, 7, 2, 7], i:5 dp[7]=3, f[4]=dp[2]+1=1, f[5]=f[4]+1=2 not 4
             for(int p: pri) {
-                // if(dp[p] == INT_MAX) {
-                //     // 之前没有出现这个质因数，这个数注定一个为一组
-                //     // 以p为右端点的最小划分
-                //     dp[p] = f[i - 1] + 1;
-                //     //之前出现相同质因数，值不变 [2,3,5,...,5]
-                // }
-                f[i] = min(f[i], dp[p]);
-            }
-            for(int p: pri) {
+                dp[p] = min(dp[p], f[i - 1]);
                 // 需要更新dp[p]
-                // [2,3,5,4,2,5]  dp[5]=3->dp[5]=2
-                dp[p] = min(dp[p], f[i]);  // 更新有问题
-                // [2,3,5,4,2,10,5] 碰到nums[i]=10就更新dp[5]=2 not 1,不然后一个5更新有误dp[5] 
+                // [2,3,5,4,2,5]  dp[5]=2->dp[5]=1
+                // [2,3,5,4,2,10,11,13,17,5]
+                // f[2]= dp[5]+1 =3, 碰到nums[i]=10,f[5]=1，不更新dp[5],f[9] = 2+1 = 3，实际1+1=2
+                f[i] = min(f[i], dp[p] + 1);
             }
             /* 实际要从第一次写的动规思路理解: 其实优化的是第二层循环
                 f[i] = f[i-1]+1;  //f[i] <= f[i-1]+1
                 for(j = i - 1; j >= 0; j--) {
                     if(gcd(nums[i], nums[j]) > 1) {
                         // 通过dp[p]（质因子）可以直接找到以gcd=p>1为左右端点的最小的f
-                        // 如果质因子是第一个数，直接dp[p]=1,f[i]=1找到最小划分
+                        // 如果质因子是第一个数，直接dp[p]=0,f[i]=1找到最小划分
                     }
                     else {
                         // 对于两个gcd(nums[i],nums[j])==1的数 [i,j]一个大组还要细分，最大细分为i-j+1组
@@ -99,7 +93,6 @@ public:
                 }
             */
         }
-        
         return f[n - 1];
     }
 };
