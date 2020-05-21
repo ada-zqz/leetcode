@@ -3,19 +3,16 @@ public:
     int islandPerimeter(vector<vector<int>>& grid) {
         int m = grid.size();
         int n = grid[0].size();
-        vector<vector<int>> gd(m + 2, vector<int>(n + 2, 0));
-        for(int i = 1; i <= m; i++) {
-            for(int j = 1; j <= n; j++) {
-                gd[i][j] = grid[i - 1][j - 1];
+        int cn = 0, ld = 0;  // cn返回两个land cell连接，ld返回land cell的个数
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(grid[i][j]) {
+                    ld++;
+                    if(j != 0 && grid[i][j - 1]) cn++;
+                    if(i != 0 && grid[i - 1][j]) cn++;
+                }
             }
         }
-        int res = 0;
-        for(int i = 1; i <= m; i++) {
-            for(int j = 1; j <= n; j++) {
-                if(gd[i][j] == 0) continue;
-                res += !gd[i][j - 1] + !gd[i][j + 1] + !gd[i - 1][j] + !gd[i + 1][j];
-            }
-        }
-        return res;
+        return 4 * ld - 2 * cn; //每个land cell有4条边，有cn个两两相连的岛屿，减去2*cn条边
     }
 };
