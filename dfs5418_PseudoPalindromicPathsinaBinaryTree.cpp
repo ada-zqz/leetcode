@@ -35,31 +35,12 @@ public:
     bool ispd(vector<int> pd) {
         // for(auto p: pd) cout << p << " ";
         // cout << endl;
-        int n = pd.size();
-        if(n == 1) return true;
-        if(n == 2 && (pd[0] != pd[1])) return false;
-        int l = 0, r = n - 1;
-        int change = 0;
-        while(l < r) {
-            if(pd[l] == pd[r]) {
-                l++;
-                r--;
-            }
-            else {
-                if(change == 0) {
-                    if(pd[r - 1] != pd[r]) swap(pd[r - 1], pd[r]);
-                    else swap(pd[l], pd[l + 1]);
-                    change = 1;
-                }
-                if(pd[l] == pd[r]) {
-                    l++;
-                    r--;
-                }
-                else {
-                    return false;
-                }
-            }
+        unordered_set<int> st;
+        for(auto p: pd) {
+            if(st.find(p) == st.end()) st.insert(p);
+            else st.erase(p);
         }
-        return true;
+        if(st.size() <= 1) return true;
+        else return false;
     }
 };
