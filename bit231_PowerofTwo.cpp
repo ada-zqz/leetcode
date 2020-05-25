@@ -1,14 +1,8 @@
 class Solution {
 public:
     bool isPowerOfTwo(int n) {
-        static unordered_set<int> st;
-        if(st.size() == 0) {
-            int pre = 1;
-            for(int i = 0; i < 31; i++) {
-                st.insert(pre);
-                pre = pre << 1;
-            }
-        }
-        return st.find(n) != st.end();
+        // 00001000 && 00000111 = 0
+        // 00001010 && 00001001 前一位的1保持不变
+        return n > 0 && ((n & (n - 1)) == 0);  //(n & (n - 1) == 0) 少了括号
     }
 };
