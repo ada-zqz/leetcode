@@ -10,18 +10,18 @@ public:
         int mid = arr[mn];
         auto cmp = [](pair<int, int> u1, pair<int, int> u2) { 
             if(u1.first != u2.first) return u1.first > u2.first; 
-            return u1.second < u2.second;     
+            return u1.second > u2.second;     
         };
         multiset<pair<int, int>, decltype(cmp)> mt(cmp);  //val, idx
         for(int i = 0; i < n; i++) {
-            mt.insert({abs(brr[i] - mid), i});
+            mt.insert({abs(brr[i] - mid), brr[i]});
         }
         
         vector<int> res(k);
         int i = 0;
         for(auto m: mt) {
             if(i < k) {
-                res[i++] = brr[m.second];
+                res[i++] = m.second;
             }
         }
         return res;
