@@ -1,28 +1,32 @@
 class TreeAncestor {
 public:
-    unordered_map<int, vector<int>> mp;
+    int dp[50005][16]; // 2^10=1024, 2^6=64
     TreeAncestor(int n, vector<int>& parent) {
-        mp.clear();
-        for(int i = 0; i < n; i++) {
-            mp[i].push_back(parent[i]);
+        //dp[i][j] i->2^j
+        for(int i = 0; i < 50005; i++) {
+            for(int j = 0; j < 16; j++) {
+                dp[i][j] = -1;
+            }
         }
-        for(int i = 1; i < n; i++) {
-            int p = mp[i][0]; //parent
-            while(p != 0) {
-                for(auto pp: mp[p]) mp[i].push_back(pp);
-                p = mp[i].back();
+        for(int i = 0; i < n; i++) {
+            dp[i][0] = parent[i]; //往上跳一步到的节点
+        }
+        for(int i = 1; i < 16; i++) {
+            //2^15=32768
+            for(int j = 0; j < n; j++) {
+                if(dp[j][i - 1] >= 0) dp[j][i] = dp[dp[j][i - 1]][i - 1];
             }
         }
     }
     
     int getKthAncestor(int node, int k) {
-        if(mp[node].size() < k) return -1;
-        return mp[node][k - 1];
-        // while(k-- > 0) {
-        //     node = mp[node];
-        //     if(node == -1) return -1;
-        // }
-        // return node;
+        while(k > 0) {
+            int sp = log2(k);
+            node = dp[node][sp];
+            if(node == -1) return -1;
+            k = k - pow(2, sp); // k = k - (1 << sp);
+        }
+        return node;
     }
 };
 
