@@ -13,18 +13,9 @@ public:
         int meet = 0;
         for(i = ++i; i < n; i++) {
             if(nums[i]) {
-                if(meet == 0) {
-                    //没有遇到0
-                    pre1++;
-                    pre2++;
-                    res = max(res, pre1);
-                }
-                else {
-                    // 前面有个0
-                    pre2++;
-                    pre1++;
-                    res = max(res, pre2);
-                }
+                pre2++;
+                pre1++;
+                res = max(res, pre2);
             }
             else {
                 //遇到0
