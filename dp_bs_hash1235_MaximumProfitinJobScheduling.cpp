@@ -11,7 +11,7 @@ public:
         
         // dp + binary search
         map<int, int> dp = {{0, 0}}; //endtime, total profit
-        for(auto j: jb) {
+        for(auto& j: jb) { //应用速度和存储变好
             
             // // int cur = dp.lower_bound(j[1])->second + j[2]; 计算错误，找到的位置不对
             // // [1,2,3,4,6]
