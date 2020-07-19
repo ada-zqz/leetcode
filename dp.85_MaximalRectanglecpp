@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if(matrix.empty()) return 0;
+        int m = matrix.size();
+        int n = matrix[0].size();
+        vector<int> h(n, 0);  // 从这一行的第j个往上有几个1
+        vector<int> l(n, 0), r(n, n);  // 上一行第j个位置最左边1的位置，1右边第一个不为1的
+        int res = 0;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(matrix[i][j] == '1') h[j]++;
+                else h[j] = 0; //从头开始计数
+            }
+            int lc = 0;  //目前的j考虑上面的i的l[j]结果后的为1的最左的位置
+            // 上面为0，没有影响；上面为1，取最高的长方形对应的最近的j
+            // 第一个数为1或者0：对应的l[0]=0；要乘以h，所以没关系
+            for(int j = 0; j < n; j++) {
+                if(matrix[i][j] == '1') l[j] = max(l[j], lc);
+                else {
+                    l[j] = 0;
+                    lc = j + 1;
+                } 
+            }
+            int rc = n;
+            for(int j = n - 1; j>= 0; j--) {
+                if(matrix[i][j] == '1') r[j] = min(r[j], rc);
+                else {
+                    r[j] = n;
+                    rc = j;
+                }
+            }
+            for(int j = 0; j < n; j++) {
+                res = max(res, h[j] * (r[j] - l[j]));
+            }
+        }
+        return res;
+    }
+};
