@@ -4,18 +4,24 @@ public:
         int n = num.size();
         if(k >= n) return "0";
         
-        while(k > 0) {
-            int i = 0;
-            while(i + 1 < n && num[i] <= num[i+1]) i++;
-            // 每次删掉比后面数大的数
-            num.erase(i, 1);
-            k--;
+        // stack
+        string res;
+        int ers = 0;
+        for(int i = 0; i < n; i++) {
+            while(!res.empty() && res.back() > num[i] && k > 0) {
+                res.pop_back();
+                k--;
+                ers++;
+            }
+            res.push_back(num[i]);
         }
+        if(k > 0) res.erase(n - ers - k, k);
+
         // 开头的0删除
         int s = 0;
-        while(s < num.size() - 1 && num[s] == '0') s++;
-        num.erase(0, s);
+        while (s < res.size() - 1 && res[s] == '0')  s++;
+        res.erase(0, s);
         
-        return num;
+        return res;
     }
 };
