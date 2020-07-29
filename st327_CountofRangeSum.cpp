@@ -15,12 +15,10 @@ public:
         // [start, mid), [mid, end)已经根据sum排好序
         int count = MergeSort(sums, start, mid, lower, upper) 
                   + MergeSort(sums, mid, end, lower, upper);
-        int j = mid, k = mid, t = mid;
         for(int i = start; i < mid; i++) {
-            // 只走一遍O(n)
-            while(k < end && sums[k] - sums[i] < lower) k++;
-            while(j < end && sums[j] - sums[i] <= upper) j++;
-            count += j - k;
+            auto j = lower_bound(sums.begin() + mid, sums.begin() + end, sums[i] + lower);
+            auto k = upper_bound(sums.begin() + mid, sums.begin() + end, sums[i] + upper);
+            count += k - j;
         }
         // 排好序
         inplace_merge(sums.begin() + start, sums.begin() + mid, sums.begin() + end);
